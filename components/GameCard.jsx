@@ -1,5 +1,5 @@
-import { View, Text, Image, StyleSheet, Animated, Pressable } from 'react-native';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
+import { View, Text, Image, StyleSheet, Animated, Pressable, Button, ScrollView } from 'react-native';
 import { Score} from './Score';
 import { Link } from 'expo-router';
 import { styled } from 'nativewind';
@@ -27,24 +27,31 @@ export function GameCard({ game }) {
 }
 
 export function GameDetails({ game }) {
-  console.log(game.reviews.length);
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+
+  }
+  
+
   return (
-    <View style={styles.cardDetails} >
+    <ScrollView style={styles.cardDetails}>
       <Text style={styles.title}>{game.title}</Text>
       <Image width={''} height={500} source={{ uri: game.img }} />
         <View style={{ paddingTop: 10, paddingBottom: 10}}>
       <Text style={styles.detailDescription} >{game.description}</Text>
+      <Button color="#841584" title='Ver comentarios' onPress={toggleVisibility} ></Button>
         </View>
           {game.reviews.map((review, index) => ( 
-            <View key={index} style={{ marginBottom: 10, color: 'green' }}>
-              <Text style={{ fontSize: 16, color: 'green' }}>{review.score}</Text>
+            <View id='reviews' key={index} style={{ marginTop: 10, color: 'green', display: isVisible ? 'flex' : 'none'  }}>
+              <Text style={{ fontSize: 16, color: 'green' }}> Puntuation: {review.score}</Text>
               <Text style={{ fontSize: 16, color: 'white' }}>{review.author}</Text>
-              <Text style={{ fontSize: 16, color: 'white' }}>{review.publicationName}</Text>
+              <Text style={{ fontSize: 16, color: 'white' }}> User name: {review.publicationName}</Text>
               <Text style={{ fontSize: 16, color: 'white' }}>{review.date}</Text>
               <Text style={{ fontSize: 16, color: 'white' }}>{review.quote}</Text>
             </View>
           ))}
-    </View>
+    </ScrollView>
   );
 }
 
